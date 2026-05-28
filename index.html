@@ -1,9 +1,1984 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Example</title>
-    </head>
-    <body>
-        <p>This is an example of a simple HTML page with one paragraph.</p>
-    </body>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>CityTrip</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green-50: #f0fdf4;
+    --green-100: #dcfce7;
+    --green-200: #bbf7d0;
+    --green-300: #86efac;
+    --green-500: #22c55e;
+    --green-600: #16a34a;
+    --green-700: #15803d;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    --white: #ffffff;
+    --radius: 0.75rem;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #f1f5f9;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  /* Mobile phone frame */
+  .phone-frame {
+    width: 390px;
+    height: 844px;
+    background: white;
+    border-radius: 44px;
+    box-shadow: 0 50px 100px rgba(0,0,0,0.25), 0 0 0 2px #1c1c1e, inset 0 0 0 1px rgba(255,255,255,0.1);
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .phone-screen {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .phone-screen::-webkit-scrollbar { display: none; }
+
+  /* Pages */
+  .page { display: none; min-height: 100%; animation: fadein 0.3s ease; }
+  .page.active { display: block; }
+
+  @keyframes fadein {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  /* === LOGIN PAGE === */
+  .login-bg {
+    min-height: 100%;
+    background: linear-gradient(135deg, #166534 0%, #16a34a 50%, #059669 100%);
+    display: flex;
+    flex-direction: column;
+    padding: 48px 24px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .login-bg::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    filter: blur(40px);
+  }
+  .login-bg::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: -60px;
+    width: 256px; height: 256px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    filter: blur(30px);
+  }
+
+  .logo-box {
+    width: 80px; height: 80px;
+    background: white;
+    border-radius: 24px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 12px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+    position: relative; z-index: 1;
+  }
+  .logo-box svg { color: #16a34a; }
+
+  .app-title {
+    color: white;
+    font-size: 48px;
+    font-weight: 800;
+    text-align: center;
+    letter-spacing: -1px;
+    position: relative; z-index: 1;
+  }
+  .app-subtitle {
+    color: rgba(255,255,255,0.75);
+    font-size: 14px;
+    font-weight: 300;
+    text-align: center;
+    margin-bottom: 32px;
+    position: relative; z-index: 1;
+  }
+
+  .hero-img-wrap {
+    width: 100%;
+    border-radius: 24px;
+    overflow: hidden;
+    margin-bottom: 32px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+    position: relative; z-index: 1;
+  }
+  .hero-img-wrap img { width: 100%; height: 176px; object-fit: cover; display: block; }
+  .hero-img-wrap .overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+  }
+  .hero-img-wrap .location-tag {
+    position: absolute; bottom: 16px; left: 16px;
+    display: flex; align-items: center; gap: 6px;
+    color: white; font-size: 13px; font-weight: 500;
+  }
+
+  .login-card {
+    background: white;
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+    position: relative; z-index: 1;
+  }
+
+  .login-card h2 { font-size: 24px; font-weight: 700; color: var(--gray-900); margin-bottom: 4px; }
+  .login-card .sub { font-size: 13px; color: var(--gray-500); margin-bottom: 20px; }
+
+  .social-btns { display: flex; gap: 12px; margin-bottom: 20px; }
+  .social-btn {
+    flex: 1;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 10px;
+    border: 2px solid var(--gray-200);
+    border-radius: 12px;
+    background: white;
+    font-size: 13px; font-weight: 500; color: var(--gray-600);
+    cursor: pointer;
+    transition: background 0.2s;
+    font-family: inherit;
+  }
+  .social-btn:hover { background: var(--gray-50); }
+
+  .divider {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px;
+  }
+  .divider::before, .divider::after {
+    content: ''; flex: 1; height: 1px; background: var(--gray-200);
+  }
+  .divider span { font-size: 11px; color: var(--gray-400); }
+
+  .error-box {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #dc2626;
+    margin-bottom: 16px;
+  }
+
+  .form-group { margin-bottom: 12px; }
+  .form-group label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gray-600);
+    margin-bottom: 6px;
+  }
+  .form-group input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--gray-200);
+    border-radius: 12px;
+    font-size: 13px;
+    background: var(--gray-50);
+    outline: none;
+    font-family: inherit;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .form-group input:focus { border-color: #16a34a; background: white; }
+  .form-group input.error { border-color: #fca5a5; background: #fef2f2; }
+
+  .pwd-wrap { position: relative; }
+  .pwd-wrap input { padding-right: 44px; }
+  .pwd-toggle {
+    position: absolute; right: 12px; top: 50%;
+    transform: translateY(-50%);
+    background: none; border: none; cursor: pointer;
+    color: var(--gray-400); display: flex;
+  }
+  .pwd-toggle:hover { color: var(--gray-600); }
+
+  .btn-primary {
+    width: 100%;
+    padding: 16px;
+    background: #16a34a;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+    box-shadow: 0 4px 15px rgba(22,163,74,0.4);
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-primary:hover { background: #15803d; box-shadow: 0 6px 20px rgba(22,163,74,0.5); }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .btn-outline {
+    width: 100%;
+    padding: 16px;
+    background: white;
+    color: #16a34a;
+    border: 2px solid #16a34a;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .btn-outline:hover { background: var(--green-50); }
+  .btn-outline:active { transform: scale(0.98); }
+
+  .register-link {
+    margin-top: 16px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--gray-400);
+  }
+  .register-link span { color: #16a34a; font-weight: 600; cursor: pointer; }
+
+  /* === STICKY HEADER === */
+  .sticky-header {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .sticky-header-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 20px;
+  }
+  .back-btn {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+    color: var(--gray-700);
+  }
+  .back-btn:hover { background: var(--gray-100); }
+  .header-title { font-size: 17px; font-weight: 700; color: var(--gray-900); }
+
+  /* === HOME PAGE === */
+  .home-bg {
+    min-height: 100%;
+    background: linear-gradient(to bottom, var(--green-50), white);
+    padding: 32px 24px 40px;
+  }
+
+  .my-trips-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 12px;
+    border: 1px solid #bbf7d0;
+    border-radius: 50px;
+    background: white;
+    font-size: 12px; font-weight: 600; color: #15803d;
+    cursor: pointer;
+    margin-left: auto; margin-bottom: 24px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    transition: background 0.2s;
+    font-family: inherit;
+  }
+  .my-trips-btn:hover { background: var(--green-50); }
+
+  .home-hero { text-align: center; margin-bottom: 48px; }
+  .home-icon-circle {
+    width: 64px; height: 64px;
+    background: #16a34a;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 12px;
+    box-shadow: 0 8px 25px rgba(22,163,74,0.35);
+  }
+  .home-hero h1 { font-size: 36px; font-weight: 800; color: var(--gray-900); margin-bottom: 8px; }
+  .home-hero p { font-size: 14px; color: var(--gray-500); }
+
+  .search-card {
+    background: white;
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+  }
+  .search-card h2 { font-size: 22px; font-weight: 700; color: var(--gray-900); margin-bottom: 8px; }
+  .search-card .sub { font-size: 13px; color: var(--gray-500); margin-bottom: 24px; }
+
+  .input-group { margin-bottom: 16px; }
+  .input-group label {
+    display: block;
+    font-size: 13px; font-weight: 500; color: var(--gray-700);
+    margin-bottom: 8px;
+  }
+  .input-with-icon { position: relative; }
+  .input-with-icon svg {
+    position: absolute; left: 16px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-400); pointer-events: none;
+  }
+  .input-with-icon input {
+    width: 100%;
+    padding: 12px 16px 12px 44px;
+    border: 2px solid var(--gray-200);
+    border-radius: 12px;
+    font-size: 14px;
+    outline: none;
+    font-family: inherit;
+    transition: border-color 0.2s;
+    color: var(--gray-800);
+  }
+  .input-with-icon input:focus { border-color: #16a34a; }
+  .input-suffix {
+    position: absolute; right: 16px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-500); font-size: 14px;
+  }
+
+  /* === FILTERS PAGE === */
+  .page-content { padding: 24px; min-height: calc(100% - 65px); background: linear-gradient(to bottom, var(--green-50), white); }
+
+  .tip-box {
+    display: flex; gap: 12px;
+    background: var(--green-50);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 32px;
+  }
+  .tip-box p { font-size: 14px; font-weight: 500; color: var(--gray-900); }
+  .tip-box .sub { font-size: 13px; color: var(--gray-600); margin-top: 4px; }
+
+  .section-title { font-size: 20px; font-weight: 700; color: var(--gray-900); margin-bottom: 8px; }
+  .section-sub { font-size: 13px; color: var(--gray-600); margin-bottom: 16px; }
+
+  .tags-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
+  .tag-btn {
+    padding: 8px 16px;
+    border-radius: 50px;
+    border: 2px solid var(--gray-200);
+    background: white;
+    font-size: 14px; font-weight: 500; color: var(--gray-700);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .tag-btn.active {
+    background: #16a34a; color: white; border-color: #16a34a;
+    box-shadow: 0 4px 12px rgba(22,163,74,0.3);
+  }
+  .tag-btn:hover:not(.active) { border-color: #86efac; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 32px; }
+  .grid-btn {
+    padding: 16px;
+    border: 2px solid var(--gray-200);
+    border-radius: 12px;
+    background: white;
+    font-size: 14px; font-weight: 500; color: var(--gray-700);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    text-align: center;
+  }
+  .grid-btn.active {
+    background: #16a34a; color: white; border-color: #16a34a;
+    box-shadow: 0 4px 15px rgba(22,163,74,0.3);
+  }
+
+  /* === PERSONALIZATION PAGE === */
+  .progress-bar {
+    height: 6px;
+    background: var(--gray-200);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 32px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: #16a34a;
+    border-radius: 999px;
+    transition: width 0.4s ease;
+  }
+
+  .step-label { font-size: 11px; font-weight: 600; color: #16a34a; text-transform: uppercase; letter-spacing: 0.08em; }
+
+  .white-card {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin-bottom: 16px;
+  }
+  .white-card-title { font-size: 15px; font-weight: 700; color: var(--gray-900); margin-bottom: 16px; }
+  .white-card-sub { font-size: 12px; color: var(--gray-400); margin-bottom: 16px; margin-top: -12px; }
+
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .icon-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    padding: 12px 4px;
+    border: 2px solid var(--gray-200);
+    border-radius: 12px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    color: var(--gray-500);
+  }
+  .icon-btn.active { border-color: #16a34a; background: var(--green-50); color: #15803d; }
+  .icon-btn span { font-size: 10px; font-weight: 500; }
+
+  .activity-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px;
+    border: 2px solid var(--gray-200);
+    border-radius: 12px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 8px;
+    font-family: inherit;
+    width: 100%;
+    text-align: left;
+  }
+  .activity-item.active { border-color: #16a34a; background: var(--green-50); }
+  .activity-icon {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .activity-label { flex: 1; font-size: 14px; font-weight: 500; }
+  .activity-item.active .activity-label { color: #15803d; }
+  .activity-item:not(.active) .activity-label { color: var(--gray-700); }
+  .check-circle {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--gray-300);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .check-circle.checked { border-color: #16a34a; background: #16a34a; }
+
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+
+  .range-labels { display: flex; justify-content: space-between; margin-bottom: 8px; }
+  .range-labels span { font-size: 11px; font-weight: 500; color: var(--gray-400); }
+  .range-labels span.active { color: #16a34a; }
+  input[type="range"] {
+    width: 100%;
+    accent-color: #16a34a;
+    height: 6px;
+    cursor: pointer;
+  }
+
+  /* === RESULTS PAGE === */
+  .results-header { padding: 0 24px 24px; background: linear-gradient(to bottom, var(--green-50), white); }
+  .results-title { font-size: 24px; font-weight: 800; color: var(--gray-900); margin-bottom: 4px; }
+  .results-sub { font-size: 14px; color: var(--gray-600); }
+
+  .offer-card {
+    margin: 0 24px 16px;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 2px solid var(--gray-100);
+    background: white;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    transition: box-shadow 0.2s;
+  }
+  .offer-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.15); }
+
+  .offer-img { position: relative; height: 192px; overflow: hidden; }
+  .offer-img img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.3s;
+  }
+  .offer-card:hover .offer-img img { transform: scale(1.05); }
+  .rating-badge {
+    position: absolute; top: 12px; right: 12px;
+    display: flex; align-items: center; gap: 4px;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(8px);
+    padding: 4px 8px;
+    border-radius: 50px;
+    font-size: 13px; font-weight: 600;
+  }
+
+  .offer-body { padding: 16px; }
+  .offer-title { font-size: 17px; font-weight: 700; color: var(--gray-900); margin-bottom: 8px; }
+  .offer-meta { font-size: 13px; color: var(--gray-600); display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+  .offer-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
+  .offer-tag {
+    background: var(--green-100);
+    color: #15803d;
+    font-size: 11px; font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 50px;
+  }
+  .offer-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 8px;
+  }
+  .offer-price { font-size: 26px; font-weight: 800; color: var(--gray-900); }
+  .offer-price-sub { font-size: 12px; color: var(--gray-500); margin-left: 4px; }
+  .btn-sm {
+    padding: 10px 20px;
+    background: #16a34a;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px; font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .btn-sm:hover { background: #15803d; }
+  .btn-sm:active { transform: scale(0.95); }
+
+  /* === SUMMARY PAGE === */
+  .summary-trip-card {
+    margin: 0 24px 24px;
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    display: flex; align-items: center; gap: 16px;
+  }
+  .trip-icon {
+    width: 48px; height: 48px;
+    background: var(--green-100);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .price-breakdown {
+    margin: 0 24px 24px;
+    background: white;
+    border-radius: 20px;
+    border: 2px solid var(--gray-100);
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+  .breakdown-title { padding: 20px 20px 0; font-size: 19px; font-weight: 700; color: var(--gray-900); }
+  .breakdown-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .breakdown-item:last-child { border-bottom: none; }
+  .breakdown-item-left { display: flex; align-items: center; gap: 12px; }
+  .breakdown-icon {
+    width: 40px; height: 40px;
+    background: var(--gray-100);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .breakdown-label { font-size: 14px; font-weight: 500; color: var(--gray-700); }
+  .breakdown-amount { font-size: 15px; font-weight: 600; color: var(--gray-900); }
+  .breakdown-total {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px;
+    border-top: 2px solid var(--gray-200);
+  }
+  .breakdown-total-label { font-size: 17px; font-weight: 700; color: var(--gray-900); }
+  .breakdown-total-price { font-size: 28px; font-weight: 800; color: #16a34a; }
+
+  .perks-box {
+    margin: 0 24px 24px;
+    background: var(--green-50);
+    border-radius: 16px;
+    padding: 16px;
+  }
+  .perk-item { font-size: 13px; color: var(--gray-700); margin-bottom: 8px; }
+  .perk-item:last-child { margin-bottom: 0; }
+
+  /* === VALIDATION PAGE === */
+  .validation-content { padding: 32px 24px; background: linear-gradient(to bottom, var(--green-50), white); min-height: 100%; }
+
+  .validation-header { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; }
+  .back-circle {
+    width: 40px; height: 40px;
+    border: 2px solid var(--gray-200);
+    border-radius: 50%;
+    background: white;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    flex-shrink: 0;
+  }
+  .back-circle:hover { border-color: #16a34a; }
+
+  .trip-recap-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+  }
+  .trip-recap-img { position: relative; height: 112px; overflow: hidden; }
+  .trip-recap-img img { width: 100%; height: 100%; object-fit: cover; }
+  .trip-recap-img .overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.6), transparent); }
+  .trip-recap-info {
+    position: absolute; bottom: 12px; left: 16px; color: white;
+  }
+  .trip-recap-info h3 { font-size: 18px; font-weight: 700; }
+  .trip-recap-info .sub { font-size: 11px; color: rgba(255,255,255,0.75); display: flex; align-items: center; gap: 4px; }
+  .trip-recap-dates {
+    display: grid; grid-template-columns: 1fr 1fr;
+    border-top: 1px solid var(--gray-100);
+  }
+  .recap-date-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px 16px;
+  }
+  .recap-date-item + .recap-date-item { border-left: 1px solid var(--gray-100); }
+  .recap-date-item .label { font-size: 10px; color: var(--gray-400); }
+  .recap-date-item .val { font-size: 12px; font-weight: 600; color: var(--gray-800); }
+
+  .price-detail {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+  }
+  .price-row {
+    display: flex; justify-content: space-between;
+    font-size: 13px;
+    padding: 5px 0;
+  }
+  .price-row .lbl { color: var(--gray-500); }
+  .price-row .val { font-weight: 500; color: var(--gray-800); }
+  .price-total {
+    display: flex; justify-content: space-between;
+    border-top: 1px solid var(--gray-200);
+    margin-top: 12px; padding-top: 12px;
+  }
+  .price-total .lbl { font-size: 15px; font-weight: 700; color: var(--gray-900); }
+  .price-total .val { font-size: 22px; font-weight: 800; color: #16a34a; }
+
+  .payment-card {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+  }
+  .payment-option {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px;
+    border: 2px solid var(--gray-200);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 8px;
+    background: white;
+    width: 100%; text-align: left;
+    font-family: inherit;
+  }
+  .payment-option.active { border-color: #16a34a; background: var(--green-50); }
+  .payment-option:last-child { margin-bottom: 0; }
+  .pay-icon-wrap {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    background: var(--gray-100);
+    transition: background 0.2s;
+  }
+  .payment-option.active .pay-icon-wrap { background: var(--green-100); }
+  .pay-label { font-size: 13px; font-weight: 600; color: var(--gray-700); }
+  .payment-option.active .pay-label { color: #15803d; }
+  .pay-sub { font-size: 11px; color: var(--gray-400); }
+
+  .security-box {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--green-50);
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 12px; color: #15803d;
+    margin-bottom: 20px;
+  }
+
+  .cgv-row {
+    display: flex; align-items: flex-start; gap: 12px;
+    margin-bottom: 20px;
+    cursor: pointer;
+  }
+  .checkbox {
+    width: 20px; height: 20px;
+    border: 2px solid var(--gray-300);
+    border-radius: 4px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    margin-top: 1px;
+  }
+  .checkbox.checked { border-color: #16a34a; background: #16a34a; }
+  .cgv-text { font-size: 12px; color: var(--gray-500); line-height: 1.5; }
+  .cgv-text a { color: #16a34a; font-weight: 600; }
+
+  /* === CONFIRMATION PAGE === */
+  .confirmation-page {
+    min-height: 100%;
+    background: linear-gradient(to bottom, var(--green-50), white);
+    display: flex; align-items: center; justify-content: center;
+    padding: 32px 24px;
+  }
+  .confirmation-inner { width: 100%; text-align: center; }
+  .success-circle {
+    width: 128px; height: 128px;
+    background: var(--green-100);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 32px;
+    box-shadow: 0 10px 40px rgba(22,163,74,0.2);
+    animation: bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  @keyframes bounce-in {
+    from { transform: scale(0.3); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .conf-title { font-size: 30px; font-weight: 800; color: var(--gray-900); margin-bottom: 12px; }
+  .conf-sub { font-size: 16px; color: var(--gray-600); margin-bottom: 32px; }
+  .conf-card {
+    background: white;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    margin-bottom: 32px;
+  }
+  .conf-email {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    color: #16a34a; font-size: 13px; font-weight: 500;
+    margin-bottom: 16px;
+  }
+  .conf-details {
+    background: var(--green-50);
+    border-radius: 12px;
+    padding: 16px;
+  }
+  .conf-row {
+    display: flex; justify-content: space-between;
+    font-size: 13px; padding: 6px 0;
+  }
+  .conf-row .lbl { color: var(--gray-600); }
+  .conf-row .val { font-weight: 600; color: var(--gray-900); }
+
+  /* === MY TRIPS PAGE === */
+  .mytrips-header {
+    background: white;
+    padding: 40px 24px 24px;
+    box-shadow: 0 1px 12px rgba(0,0,0,0.06);
+  }
+  .user-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+  .user-greeting .hello { font-size: 12px; color: var(--gray-400); }
+  .user-greeting .name { font-size: 24px; font-weight: 800; color: var(--gray-900); }
+  .avatar-circle {
+    width: 48px; height: 48px;
+    background: #16a34a;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 700; color: white;
+    box-shadow: 0 4px 15px rgba(22,163,74,0.3);
+  }
+  .stats-bar {
+    background: #16a34a;
+    border-radius: 20px;
+    padding: 16px;
+    display: flex; gap: 0;
+    color: white;
+  }
+  .stat-item { flex: 1; text-align: center; }
+  .stat-item + .stat-item { border-left: 1px solid rgba(255,255,255,0.2); }
+  .stat-val { font-size: 26px; font-weight: 800; }
+  .stat-lbl { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 2px; }
+
+  .mytrips-body { padding: 24px; }
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .section-name { font-size: 15px; font-weight: 700; color: var(--gray-900); }
+  .coming-tag {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 12px; font-weight: 500; color: #16a34a;
+  }
+
+  .featured-trip {
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    cursor: pointer;
+    transition: transform 0.2s;
+    margin-bottom: 24px;
+  }
+  .featured-trip:hover { transform: scale(1.01); }
+  .featured-img { position: relative; height: 176px; overflow: hidden; }
+  .featured-img img { width: 100%; height: 100%; object-fit: cover; }
+  .featured-img .overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.1) 50%, transparent 100%); }
+  .featured-info { position: absolute; bottom: 16px; left: 16px; right: 16px; }
+  .featured-country { font-size: 11px; color: rgba(255,255,255,0.7); display: flex; align-items: center; gap: 4px; margin-bottom: 4px; }
+  .featured-bottom { display: flex; align-items: flex-end; justify-content: space-between; }
+  .featured-city { font-size: 26px; font-weight: 800; color: white; }
+  .confirmed-badge { background: #16a34a; color: white; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 50px; }
+  .featured-dates { font-size: 11px; color: rgba(255,255,255,0.75); margin-top: 4px; }
+  .featured-footer {
+    background: white;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px;
+  }
+  .featured-footer-info { font-size: 13px; color: var(--gray-600); }
+  .featured-footer-info strong { color: var(--gray-900); margin-left: 12px; font-weight: 700; }
+  .arrow-circle {
+    width: 32px; height: 32px;
+    background: var(--green-100);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .past-trip-item {
+    display: flex; align-items: center; gap: 16px;
+    background: white;
+    border-radius: 20px;
+    padding: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+  }
+  .past-trip-item:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+  .past-img { width: 80px; height: 64px; border-radius: 12px; overflow: hidden; flex-shrink: 0; }
+  .past-img img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
+  .past-info { flex: 1; min-width: 0; }
+  .past-name { font-size: 15px; font-weight: 700; color: var(--gray-800); }
+  .past-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 10px; font-weight: 600;
+    padding: 2px 8px; border-radius: 50px;
+    margin-left: 8px;
+  }
+  .past-dates { font-size: 12px; color: var(--gray-400); display: flex; align-items: center; gap: 4px; margin-top: 4px; }
+  .past-details { font-size: 12px; font-weight: 500; color: var(--gray-600); margin-top: 4px; }
+
+  .new-trip-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%;
+    padding: 20px;
+    border: 2px dashed #86efac;
+    border-radius: 20px;
+    background: transparent;
+    color: #16a34a;
+    font-size: 15px; font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    margin-top: 4px;
+  }
+  .new-trip-btn:hover { border-color: #16a34a; background: var(--green-50); }
+
+  /* === MY TRIP DETAIL === */
+  .trip-detail-hero { position: relative; height: 256px; overflow: hidden; }
+  .trip-detail-hero img { width: 100%; height: 100%; object-fit: cover; }
+  .trip-detail-hero .overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 50%, transparent 100%); }
+  .trip-hero-nav {
+    position: absolute; top: 16px; left: 16px; right: 16px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .hero-icon-btn {
+    width: 40px; height: 40px;
+    background: rgba(0,0,0,0.3);
+    backdrop-filter: blur(8px);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    border: none; cursor: pointer; color: white;
+  }
+  .hero-icon-btn:hover { background: rgba(0,0,0,0.5); }
+  .trip-hero-info {
+    position: absolute; bottom: 16px; left: 16px;
+    color: white;
+  }
+  .trip-hero-info .country { font-size: 12px; color: rgba(255,255,255,0.75); display: flex; align-items: center; gap: 4px; margin-bottom: 6px; }
+  .trip-hero-info h1 { font-size: 32px; font-weight: 800; }
+
+  .trip-detail-body { padding: 24px; background: var(--gray-50); min-height: calc(100% - 256px); }
+  .chip-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+  .chip {
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 12px; font-weight: 600;
+  }
+  .chip-green { background: var(--green-100); color: #15803d; }
+  .chip-gray { background: var(--gray-200); color: var(--gray-600); display: flex; align-items: center; gap: 4px; }
+
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+  .stat-card {
+    background: white;
+    border-radius: 16px;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  }
+  .stat-card .val { font-size: 24px; font-weight: 800; color: #16a34a; }
+  .stat-card .lbl { font-size: 10px; color: var(--gray-400); margin-top: 2px; }
+
+  .rating-row {
+    display: flex; align-items: center; gap: 8px;
+    background: white;
+    border-radius: 16px;
+    padding: 14px 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    margin-bottom: 24px;
+  }
+  .stars { display: flex; gap: 2px; }
+  .rating-val { font-size: 14px; font-weight: 700; color: var(--gray-700); }
+  .rating-desc { font-size: 12px; color: var(--gray-400); }
+
+  .programme-section h2 { font-size: 17px; font-weight: 700; color: var(--gray-900); margin-bottom: 16px; }
+  .day-card {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    margin-bottom: 16px;
+  }
+  .day-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .day-title { font-size: 13px; font-weight: 700; color: var(--gray-800); }
+  .day-date { font-size: 12px; color: var(--gray-400); }
+  .activity-row { display: flex; gap: 12px; margin-bottom: 12px; }
+  .activity-row:last-child { margin-bottom: 0; }
+  .activity-dot {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .activity-content { flex: 1; min-width: 0; }
+  .activity-time-title { display: flex; align-items: baseline; gap: 8px; }
+  .activity-time { font-size: 11px; font-weight: 700; color: var(--gray-900); }
+  .activity-name { font-size: 13px; font-weight: 500; color: var(--gray-700); }
+  .activity-desc { font-size: 11px; color: var(--gray-400); margin-top: 2px; }
+
+  /* Spinner */
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spinner { animation: spin 0.8s linear infinite; }
+
+  /* Utils */
+  .hidden { display: none !important; }
+  .mt-4 { margin-top: 16px; }
+  .mt-6 { margin-top: 24px; }
+  .mb-0 { margin-bottom: 0; }
+  .text-center { text-align: center; }
+  .flex { display: flex; }
+  .items-center { align-items: center; }
+  .justify-between { justify-content: space-between; }
+  .gap-2 { gap: 8px; }
+  .gap-1 { gap: 4px; }
+  .pb-8 { padding-bottom: 32px; }
+  .px-6 { padding-left: 24px; padding-right: 24px; }
+  .pt-6 { padding-top: 24px; }
+
+  /* Responsive: on desktop show the phone mockup centered */
+  @media (max-width: 430px) {
+    body { padding: 0; background: white; }
+    .phone-frame {
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      border-radius: 0;
+      box-shadow: none;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="phone-frame">
+  <div class="phone-screen" id="screen">
+
+    <!-- ===== PAGE: LOGIN ===== -->
+    <div class="page active" id="page-login">
+      <div class="login-bg">
+        <div class="logo-box">
+          <i data-lucide="plane" style="width:40px;height:40px;color:#16a34a;"></i>
+        </div>
+        <h1 class="app-title">CityTrip</h1>
+        <p class="app-subtitle">Vos city-trips sur mesure</p>
+
+        <div class="hero-img-wrap">
+          <img src="https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=600&h=280&fit=crop&auto=format" alt="Lisbonne" />
+          <div class="overlay"></div>
+          <div class="location-tag">
+            <i data-lucide="map-pin" style="width:16px;height:16px;"></i>
+            Lisbonne · Porto · Madrid · Rome
+          </div>
+        </div>
+
+        <div class="login-card">
+          <h2>Bienvenue !</h2>
+          <p class="sub">Connectez-vous pour accéder à vos voyages.</p>
+
+          <div class="social-btns">
+            <button class="social-btn">
+              <i data-lucide="globe" style="width:16px;height:16px;color:#3b82f6;"></i>
+              Google
+            </button>
+            <button class="social-btn">
+              <svg width="16" height="16" fill="#1877F2" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              Facebook
+            </button>
+          </div>
+
+          <div class="divider"><span>ou</span></div>
+
+          <div id="login-error" class="error-box hidden">Identifiant ou mot de passe incorrect.</div>
+
+          <div class="form-group">
+            <label>Identifiant</label>
+            <input type="text" id="login-id" placeholder="ex : leo.sibour" />
+          </div>
+
+          <div class="form-group">
+            <label>Mot de passe</label>
+            <div class="pwd-wrap">
+              <input type="password" id="login-pwd" placeholder="••••••••" />
+              <button class="pwd-toggle" id="pwd-toggle-btn" type="button">
+                <i data-lucide="eye" id="pwd-icon" style="width:16px;height:16px;"></i>
+              </button>
+            </div>
+          </div>
+
+          <button class="btn-primary" id="login-btn" onclick="handleLogin()" style="margin-top:24px;" disabled>
+            Connexion
+          </button>
+
+          <p class="register-link">Pas encore de compte ? <span>S'inscrire</span></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PAGE: HOME ===== -->
+    <div class="page" id="page-home">
+      <div class="home-bg">
+        <button class="my-trips-btn" onclick="navigate('my-trips')">
+          <i data-lucide="briefcase" style="width:14px;height:14px;"></i>
+          Mes voyages
+        </button>
+
+        <div class="home-hero">
+          <div class="home-icon-circle">
+            <i data-lucide="search" style="width:32px;height:32px;color:white;"></i>
+          </div>
+          <h1>CityTrip</h1>
+          <p>Votre voyage parfait vous attend</p>
+        </div>
+
+        <div class="search-card">
+          <h2>Où voulez-vous partir ?</h2>
+          <p class="sub">Trouvez votre city-trip parfait</p>
+
+          <div class="input-group">
+            <label>Destination</label>
+            <div class="input-with-icon">
+              <i data-lucide="search" style="width:20px;height:20px;"></i>
+              <input type="text" id="home-dest" value="Lisbonne" placeholder="Ex: Lisbonne, Paris, Rome..." />
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>Dates</label>
+            <div class="input-with-icon">
+              <i data-lucide="calendar" style="width:20px;height:20px;"></i>
+              <input type="text" id="home-dates" value="12 avr - 15 avr" placeholder="12 avr - 15 avr" />
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>Budget maximum</label>
+            <div class="input-with-icon">
+              <i data-lucide="euro" style="width:20px;height:20px;"></i>
+              <input type="text" id="home-budget" value="500" placeholder="500" />
+              <span class="input-suffix">€</span>
+            </div>
+          </div>
+
+          <button class="btn-primary" onclick="handleSearch()" style="margin-top:24px;">Rechercher</button>
+        </div>
+
+        <p style="text-align:center;font-size:13px;color:var(--gray-500);margin-top:32px;">Plus de 1000 destinations disponibles</p>
+      </div>
+    </div>
+
+    <!-- ===== PAGE: FILTERS ===== -->
+    <div class="page" id="page-filters">
+      <div class="sticky-header">
+        <div class="sticky-header-inner">
+          <button class="back-btn" onclick="navigate('home')">
+            <i data-lucide="chevron-left" style="width:24px;height:24px;"></i>
+          </button>
+          <span class="header-title">Préférences</span>
+          <div style="width:40px;"></div>
+        </div>
+      </div>
+      <div class="page-content">
+        <div class="tip-box">
+          <i data-lucide="sparkles" style="width:20px;height:20px;flex-shrink:0;color:#16a34a;margin-top:2px;"></i>
+          <div>
+            <p>Personnalisez votre voyage</p>
+            <p class="sub">Dites-nous ce qui vous intéresse pour recevoir des recommandations adaptées</p>
+          </div>
+        </div>
+
+        <p class="section-title">Centres d'intérêt</p>
+        <p class="section-sub">Sélectionnez vos activités préférées</p>
+        <div class="tags-wrap" id="interests-tags"></div>
+
+        <p class="section-title">Type de voyage</p>
+        <p class="section-sub">Avec qui voyagez-vous ?</p>
+        <div class="grid-2" id="travel-type-btns"></div>
+
+        <button class="btn-primary" onclick="handleFilters()">Voir les offres</button>
+      </div>
+    </div>
+
+    <!-- ===== PAGE: PERSONALIZATION ===== -->
+    <div class="page" id="page-personalization">
+      <div class="validation-content" style="padding-top:32px;">
+        <div class="validation-header">
+          <div class="back-circle" onclick="navigate('filters')">
+            <i data-lucide="arrow-left" style="width:20px;height:20px;color:var(--gray-600);"></i>
+          </div>
+          <div>
+            <p class="step-label">Étape 3 / 5</p>
+            <h1 style="font-size:20px;font-weight:700;color:var(--gray-900);">Personnalisez votre séjour</h1>
+          </div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:60%;"></div></div>
+
+        <!-- Hébergement -->
+        <div class="white-card">
+          <p class="white-card-title">Type d'hébergement</p>
+          <div class="grid-4" id="accom-btns"></div>
+        </div>
+
+        <!-- Activités -->
+        <div class="white-card">
+          <p class="white-card-title">Vos centres d'intérêt</p>
+          <p class="white-card-sub">Sélectionnez tout ce qui vous attire</p>
+          <div id="activities-list"></div>
+        </div>
+
+        <!-- Transport -->
+        <div class="white-card">
+          <p class="white-card-title">Mode de transport</p>
+          <div class="grid-3" id="transport-btns"></div>
+        </div>
+
+        <!-- Rythme -->
+        <div class="white-card">
+          <p class="white-card-title">Rythme du voyage</p>
+          <p class="white-card-sub" style="margin-bottom:16px;">Combien d'activités par jour ?</p>
+          <div class="range-labels" id="rythme-labels"></div>
+          <input type="range" min="0" max="3" value="2" id="rythme-range" oninput="updateRythme(this.value)" />
+        </div>
+
+        <button class="btn-primary" id="perso-btn" onclick="handlePersonalization()" style="display:flex;align-items:center;justify-content:center;gap:8px;">
+          Voir les résultats
+          <i data-lucide="chevron-right" style="width:20px;height:20px;"></i>
+        </button>
+        <div class="pb-8"></div>
+      </div>
+    </div>
+
+    <!-- ===== PAGE: RESULTS ===== -->
+    <div class="page" id="page-results">
+      <div class="sticky-header">
+        <div class="sticky-header-inner">
+          <button class="back-btn" onclick="navigate('personalization')">
+            <i data-lucide="chevron-left" style="width:24px;height:24px;"></i>
+          </button>
+          <span class="header-title">Résultats</span>
+          <div style="width:40px;"></div>
+        </div>
+      </div>
+      <div class="results-header pt-6">
+        <h2 class="results-title">Offres pour vous</h2>
+        <p class="results-sub">3 séjours correspondent à vos préférences</p>
+      </div>
+      <div id="offers-list" style="padding-bottom:32px;"></div>
+    </div>
+
+    <!-- ===== PAGE: SUMMARY ===== -->
+    <div class="page" id="page-summary">
+      <div class="sticky-header">
+        <div class="sticky-header-inner">
+          <button class="back-btn" onclick="navigate('results')">
+            <i data-lucide="chevron-left" style="width:24px;height:24px;"></i>
+          </button>
+          <span class="header-title">Récapitulatif</span>
+          <div style="width:40px;"></div>
+        </div>
+      </div>
+      <div style="background:linear-gradient(to bottom,var(--green-50),white);min-height:calc(100% - 65px);">
+        <div class="pt-6" id="summary-content"></div>
+      </div>
+    </div>
+
+    <!-- ===== PAGE: VALIDATION ===== -->
+    <div class="page" id="page-validation">
+      <div class="validation-content">
+        <div class="validation-header">
+          <div class="back-circle" onclick="navigate('summary')">
+            <i data-lucide="arrow-left" style="width:20px;height:20px;color:var(--gray-600);"></i>
+          </div>
+          <div>
+            <p class="step-label">Étape 5 / 5</p>
+            <h1 style="font-size:20px;font-weight:700;color:var(--gray-900);">Validation & Paiement</h1>
+          </div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div>
+        <div id="validation-content"></div>
+        <div class="pb-8"></div>
+      </div>
+    </div>
+
+    <!-- ===== PAGE: CONFIRMATION ===== -->
+    <div class="page" id="page-confirmation">
+      <div class="confirmation-page">
+        <div class="confirmation-inner">
+          <div class="success-circle">
+            <i data-lucide="check-circle" style="width:80px;height:80px;color:#16a34a;"></i>
+          </div>
+          <h1 class="conf-title">Réservation confirmée !</h1>
+          <p class="conf-sub">Votre voyage à Lisbonne est réservé.</p>
+          <div class="conf-card">
+            <div class="conf-email">
+              <i data-lucide="mail" style="width:20px;height:20px;"></i>
+              Confirmation envoyée par email
+            </div>
+            <div class="conf-details">
+              <div class="conf-row">
+                <span class="lbl">Numéro de réservation</span>
+                <span class="val" id="booking-num">CT-2026-4821</span>
+              </div>
+              <div class="conf-row">
+                <span class="lbl">Date de départ</span>
+                <span class="val">12 avril 2026</span>
+              </div>
+              <div class="conf-row">
+                <span class="lbl">Destination</span>
+                <span class="val">Lisbonne, Portugal</span>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <button class="btn-primary" onclick="navigate('home')">
+              <i data-lucide="home" style="width:20px;height:20px;"></i>
+              Retour à l'accueil
+            </button>
+            <button class="btn-outline" onclick="navigate('my-trips')">Voir mes voyages</button>
+          </div>
+          <p style="margin-top:32px;font-size:13px;color:var(--gray-500);text-align:center;">Vous recevrez tous les détails de votre voyage par email.<br>Des questions ? Contactez notre service client 24/7</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PAGE: MY TRIPS ===== -->
+    <div class="page" id="page-my-trips">
+      <div class="mytrips-header">
+        <div class="user-row">
+          <div class="user-greeting">
+            <p class="hello">Bonjour,</p>
+            <p class="name" id="mytrips-name">Léo Sibour 👋</p>
+          </div>
+          <div class="avatar-circle" id="mytrips-avatar">L</div>
+        </div>
+        <div class="stats-bar">
+          <div class="stat-item">
+            <div class="stat-val">3</div>
+            <div class="stat-lbl">Voyages</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-val">9</div>
+            <div class="stat-lbl">Nuits</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-val">1 724€</div>
+            <div class="stat-lbl">Dépensé</div>
+          </div>
+        </div>
+      </div>
+      <div class="mytrips-body">
+        <div class="section-header">
+          <span class="section-name">Prochain voyage</span>
+          <span class="coming-tag">
+            <i data-lucide="plane" style="width:12px;height:12px;"></i>
+            Dans 6 semaines
+          </span>
+        </div>
+        <div class="featured-trip" onclick="navigate('my-trip')">
+          <div class="featured-img">
+            <img src="https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=400&h=220&fit=crop&auto=format" alt="Lisbonne" />
+            <div class="overlay"></div>
+            <div class="featured-info">
+              <p class="featured-country"><i data-lucide="map-pin" style="width:12px;height:12px;"></i> Portugal</p>
+              <div class="featured-bottom">
+                <span class="featured-city">Lisbonne</span>
+                <span class="confirmed-badge">Confirmé ✓</span>
+              </div>
+              <p class="featured-dates">12 – 15 avr 2026 · 3 nuits</p>
+            </div>
+          </div>
+          <div class="featured-footer">
+            <div class="featured-footer-info">9 activités <strong>594 €</strong></div>
+            <div class="arrow-circle">
+              <i data-lucide="chevron-right" style="width:16px;height:16px;color:#16a34a;"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-header">
+          <span class="section-name">Voyages passés</span>
+        </div>
+
+        <div class="past-trip-item">
+          <div class="past-img">
+            <img src="https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=400&h=220&fit=crop&auto=format" alt="Rome" />
+          </div>
+          <div class="past-info">
+            <div>
+              <span class="past-name">Rome</span>
+              <span class="past-badge" style="background:var(--gray-100);color:var(--gray-500);">
+                <i data-lucide="check-circle" style="width:10px;height:10px;"></i>
+                Terminé
+              </span>
+            </div>
+            <p class="past-dates"><i data-lucide="calendar" style="width:12px;height:12px;"></i> 18 – 22 oct 2025</p>
+            <p class="past-details">4 nuits · 720 €</p>
+          </div>
+          <i data-lucide="chevron-right" style="width:16px;height:16px;color:var(--gray-400);flex-shrink:0;"></i>
+        </div>
+
+        <div class="past-trip-item">
+          <div class="past-img">
+            <img src="https://images.unsplash.com/photo-1534351590666-13e3e96b5017?w=400&h=220&fit=crop&auto=format" alt="Amsterdam" />
+          </div>
+          <div class="past-info">
+            <div>
+              <span class="past-name">Amsterdam</span>
+              <span class="past-badge" style="background:var(--gray-100);color:var(--gray-500);">
+                <i data-lucide="check-circle" style="width:10px;height:10px;"></i>
+                Terminé
+              </span>
+            </div>
+            <p class="past-dates"><i data-lucide="calendar" style="width:12px;height:12px;"></i> 5 – 7 juin 2025</p>
+            <p class="past-details">2 nuits · 410 €</p>
+          </div>
+          <i data-lucide="chevron-right" style="width:16px;height:16px;color:var(--gray-400);flex-shrink:0;"></i>
+        </div>
+
+        <button class="new-trip-btn" onclick="navigate('home')">
+          <i data-lucide="plus" style="width:20px;height:20px;"></i>
+          Planifier un nouveau voyage
+        </button>
+        <div class="pb-8"></div>
+      </div>
+    </div>
+
+    <!-- ===== PAGE: MY TRIP DETAIL ===== -->
+    <div class="page" id="page-my-trip">
+      <div class="trip-detail-hero">
+        <img src="https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=700&h=400&fit=crop&auto=format" alt="Lisbonne" />
+        <div class="overlay"></div>
+        <div class="trip-hero-nav">
+          <button class="hero-icon-btn" onclick="navigate('my-trips')">
+            <i data-lucide="arrow-left" style="width:20px;height:20px;"></i>
+          </button>
+          <div style="display:flex;gap:8px;">
+            <button class="hero-icon-btn">
+              <i data-lucide="share-2" style="width:16px;height:16px;"></i>
+            </button>
+            <button class="hero-icon-btn">
+              <i data-lucide="download" style="width:16px;height:16px;"></i>
+            </button>
+          </div>
+        </div>
+        <div class="trip-hero-info">
+          <p class="country"><i data-lucide="map-pin" style="width:12px;height:12px;"></i> Lisbonne, Portugal</p>
+          <h1>Lisbonne</h1>
+        </div>
+      </div>
+      <div class="trip-detail-body">
+        <div class="chip-row">
+          <span class="chip chip-green">Confirmé ✓</span>
+          <span class="chip chip-gray">
+            <i data-lucide="calendar" style="width:12px;height:12px;"></i>
+            12 – 15 avr 2026
+          </span>
+          <span class="chip chip-gray">3 nuits</span>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="val">3</div><div class="lbl">Nuits</div></div>
+          <div class="stat-card"><div class="val">9</div><div class="lbl">Activités</div></div>
+          <div class="stat-card"><div class="val">594€</div><div class="lbl">Total</div></div>
+        </div>
+        <div class="rating-row">
+          <div class="stars">
+            <i data-lucide="star" style="width:16px;height:16px;fill:#facc15;color:#facc15;"></i>
+            <i data-lucide="star" style="width:16px;height:16px;fill:#facc15;color:#facc15;"></i>
+            <i data-lucide="star" style="width:16px;height:16px;fill:#facc15;color:#facc15;"></i>
+            <i data-lucide="star" style="width:16px;height:16px;fill:#facc15;color:#facc15;"></i>
+            <i data-lucide="star" style="width:16px;height:16px;color:var(--gray-200);"></i>
+          </div>
+          <span class="rating-val">4.8 / 5</span>
+          <span class="rating-desc">— Destination très appréciée</span>
+        </div>
+        <div class="programme-section">
+          <h2>Programme détaillé</h2>
+          <div class="day-card">
+            <div class="day-header"><span class="day-title">Jour 1 — Arrivée</span><span class="day-date">12 avril</span></div>
+            <div class="activity-row">
+              <div class="activity-dot" style="background:#dbeafe;color:#2563eb;"><i data-lucide="clock" style="width:16px;height:16px;"></i></div>
+              <div class="activity-content">
+                <div class="activity-time-title"><span class="activity-time">14h30</span><span class="activity-name">Arrivée à Lisbonne</span></div>
+                <p class="activity-desc">Aéroport Humberto Delgado</p>
+              </div>
+            </div>
+            <div class="activity-row">
+              <div class="activity-dot" style="background:#dcfce7;color:#16a34a;"><i data-lucide="hotel" style="width:16px;height:16px;"></i></div>
+              <div class="activity-content">
+                <div class="activity-time-title"><span class="activity-time">16h00</span><span class="activity-name">Check-in hôtel</span></div>
+                <p class="activity-desc">Bairro Alto Hotel, Lisboa</p>
+              </div>
+            </div>
+            <div class="activity-row">
+              <div class="activity-dot" style="background:#ffedd5;color:#ea580c;"><i data-lucide="utensils" style="width:16px;height:16px;"></i></div>
+              <div class="activity-content">
+                <div class="activity-time-title"><span class="activity-time">19h30</span><span class="activity-name">Dîner — Tasca do Chico</span></div>
+                <p class="activity-desc">Fado et cuisine traditionnelle</p>
+              </div>
+            </div>
+          </div>
+          <div class="day-card">
+            <div class="day-header"><span class="day-title">Jour 2 — Découverte</span><span class="day-date">13 avril</span></div>
+            <div class="activity-row">
+              <div class="activity-dot" style="background:#f3e8ff;color:#9333ea;"><i data-lucide="camera" style="width:16px;height:16px;"></i></div>
+              <div class="activity-content">
+                <div class="activity-time-title"><span class="activity-time">09h00</span><span class="activity-name">Visite du Musée National</span></div>
+                <p class="activity-desc">Art contemporain portugais</p>
+              </div>
+            </div>
+            <div class="activity-row">
+              <div class="activity-dot" style="background:#ffedd5;color:#ea580c;"><i data-lucide="utensils" style="width:16px;height:16px;"></i></div>
+              <div class="activity-content">
+                <div class="activity-time-title"><span class="activity-time">12h30</span><span class="activity-name">Déjeuner — Time Out Market</span></div>
+                <p class="activity-desc">Marché gastronomique emblématique</p>
+              </div>
+            </div>
+            <div class="activity-row">
+              <div class="activity-dot" style="background:#dcfce7;color:#16a34a;"><i data-lucide="bike" style="width:16px;height:16px;"></i></div>
+              <div class="activity-content">
+                <div class="activity-time-title"><span class="activity-time">15h00</span><span class="activity-name">Tour à vélo — Bairro Alto</span></div>
+                <p class="activity-desc">2h de balade guidée</p>
+              </div>
+            </div>
+          </div>
+          <div class="day-card">
+            <div class="day-header"><span class="day-title">Jour 3 — Exploration</span><span class="day-date">14 avril</span></div>
+            <div class="activity-row">
+              <div class="activity-dot" style="background:#f3e8ff;color:#9333ea;"><i data-lucide="camera" style="width:16px;height:16px;"></i></div>
+              <div class="activity-content">
+                <div class="activity-time-title"><span class="activity-time">10h00</span><span class="activity-name">Sintra — Palais de la Pena</span></div>
+                <p class="activity-desc">Excursion d'une journée</p>
+              </div>
+            </div>
+            <div class="activity-row">
+              <div class="activity-dot" style="background:#ffedd5;color:#ea580c;"><i data-lucide="utensils" style="width:16px;height:16px;"></i></div>
+              <div class="activity-content">
+                <div class="activity-time-title"><span class="activity-time">13h00</span><span class="activity-name">Déjeuner à Cascais</span></div>
+                <p class="activity-desc">Fruits de mer en bord de mer</p>
+              </div>
+            </div>
+            <div class="activity-row">
+              <div class="activity-dot" style="background:#dbeafe;color:#2563eb;"><i data-lucide="clock" style="width:16px;height:16px;"></i></div>
+              <div class="activity-content">
+                <div class="activity-time-title"><span class="activity-time">20h00</span><span class="activity-name">Soirée libre</span></div>
+                <p class="activity-desc">Quartier de l'Alfama</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:32px;display:flex;flex-direction:column;gap:12px;" class="pb-8">
+          <button class="btn-primary">Télécharger l'itinéraire PDF</button>
+          <button class="btn-outline" onclick="navigate('home')">Planifier un nouveau voyage</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /phone-screen -->
+</div><!-- /phone-frame -->
+
+<script>
+// ========================
+// STATE
+// ========================
+const state = {
+  user: null,
+  tripData: { destination: 'Lisbonne', dates: '12 avr - 15 avr', budget: '500' },
+  selectedInterests: ['Culture', 'Gastronomie', 'Authentique'],
+  travelType: 'Couple',
+  accom: 'hotel',
+  activities: ['culture', 'gastronomie'],
+  transport: 'avion',
+  rythme: 2,
+  selectedOffer: null,
+  cgv: false,
+  payment: 'carte',
+};
+
+// ========================
+// ROUTER
+// ========================
+function navigate(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.getElementById('screen').scrollTop = 0;
+  // Re-render dynamic pages
+  if (page === 'results') renderOffers();
+  if (page === 'summary') renderSummary();
+  if (page === 'validation') renderValidation();
+  if (page === 'my-trips') renderMyTrips();
+  lucide.createIcons();
+}
+
+// ========================
+// LOGIN
+// ========================
+const loginIdInput = document.getElementById('login-id');
+const loginPwdInput = document.getElementById('login-pwd');
+const loginBtn = document.getElementById('login-btn');
+
+function checkLoginBtn() {
+  loginBtn.disabled = !loginIdInput.value || !loginPwdInput.value;
+}
+loginIdInput.addEventListener('input', checkLoginBtn);
+loginPwdInput.addEventListener('input', checkLoginBtn);
+loginIdInput.addEventListener('keydown', e => e.key === 'Enter' && handleLogin());
+loginPwdInput.addEventListener('keydown', e => e.key === 'Enter' && handleLogin());
+
+let pwdVisible = false;
+document.getElementById('pwd-toggle-btn').addEventListener('click', () => {
+  pwdVisible = !pwdVisible;
+  loginPwdInput.type = pwdVisible ? 'text' : 'password';
+  document.getElementById('pwd-icon').setAttribute('data-lucide', pwdVisible ? 'eye-off' : 'eye');
+  lucide.createIcons();
+});
+
+function handleLogin() {
+  const id = loginIdInput.value;
+  const pwd = loginPwdInput.value;
+  const errBox = document.getElementById('login-error');
+  if (id !== 'leo.sibour' || pwd !== '1234') {
+    errBox.classList.remove('hidden');
+    loginIdInput.classList.add('error');
+    loginPwdInput.classList.add('error');
+    return;
+  }
+  errBox.classList.add('hidden');
+  loginBtn.innerHTML = `<svg class="spinner" width="20" height="20" viewBox="0 0 24 24" fill="none"><circle opacity=".25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path opacity=".75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg> Connexion...`;
+  loginBtn.disabled = true;
+  state.user = { name: 'Léo Sibour', email: 'leo.sibour@email.com' };
+  setTimeout(() => {
+    loginBtn.innerHTML = 'Connexion';
+    loginBtn.disabled = false;
+    navigate('home');
+  }, 900);
+}
+
+// ========================
+// HOME
+// ========================
+function handleSearch() {
+  state.tripData.destination = document.getElementById('home-dest').value || 'Lisbonne';
+  state.tripData.dates = document.getElementById('home-dates').value || '12 avr - 15 avr';
+  state.tripData.budget = document.getElementById('home-budget').value || '500';
+  renderFilters();
+  navigate('filters');
+}
+
+// ========================
+// FILTERS
+// ========================
+const INTERESTS = ['Culture', 'Gastronomie', 'Authentique', 'Nature', 'Aventure', 'Shopping', 'Vie nocturne', 'Détente'];
+const TRAVEL_TYPES = ['Solo', 'Couple', 'Amis', 'Famille'];
+
+function renderFilters() {
+  const tagsWrap = document.getElementById('interests-tags');
+  tagsWrap.innerHTML = INTERESTS.map(i => `
+    <button class="tag-btn ${state.selectedInterests.includes(i) ? 'active' : ''}" onclick="toggleInterest('${i}')">${i}</button>
+  `).join('');
+
+  const travelBtns = document.getElementById('travel-type-btns');
+  travelBtns.innerHTML = TRAVEL_TYPES.map(t => `
+    <button class="grid-btn ${state.travelType === t ? 'active' : ''}" onclick="selectTravelType('${t}')">${t}</button>
+  `).join('');
+}
+
+function toggleInterest(interest) {
+  if (state.selectedInterests.includes(interest)) {
+    state.selectedInterests = state.selectedInterests.filter(i => i !== interest);
+  } else {
+    state.selectedInterests.push(interest);
+  }
+  renderFilters();
+}
+
+function selectTravelType(type) {
+  state.travelType = type;
+  renderFilters();
+}
+
+function handleFilters() {
+  renderPersonalization();
+  navigate('personalization');
+}
+
+// ========================
+// PERSONALIZATION
+// ========================
+const ACCOMS = [
+  { id: 'hotel', icon: 'hotel', label: 'Hôtel' },
+  { id: 'auberge', icon: 'building-2', label: 'Auberge' },
+  { id: 'appart', icon: 'building-2', label: 'Appartement' },
+  { id: 'camping', icon: 'tent', label: 'Camping' },
+];
+const ACTIVITIES = [
+  { id: 'gastronomie', icon: 'utensils', label: 'Gastronomie', color: 'background:#ffedd5;color:#ea580c;' },
+  { id: 'culture', icon: 'camera', label: 'Culture & Musées', color: 'background:#dbeafe;color:#2563eb;' },
+  { id: 'shopping', icon: 'shopping-bag', label: 'Shopping', color: 'background:#fce7f3;color:#db2777;' },
+  { id: 'nightlife', icon: 'music', label: 'Vie nocturne', color: 'background:#f3e8ff;color:#9333ea;' },
+  { id: 'outdoor', icon: 'bike', label: 'Plein air', color: 'background:#dcfce7;color:#16a34a;' },
+];
+const TRANSPORTS = [
+  { id: 'avion', icon: 'plane', label: 'Avion' },
+  { id: 'train', icon: 'train', label: 'Train' },
+  { id: 'voiture', icon: 'car', label: 'Voiture' },
+];
+const RYTHME_LABELS = ['Détente', 'Équilibré', 'Intensif', 'Marathon'];
+
+function renderPersonalization() {
+  document.getElementById('accom-btns').innerHTML = ACCOMS.map(a => `
+    <button class="icon-btn ${state.accom === a.id ? 'active' : ''}" onclick="selectAccom('${a.id}')">
+      <i data-lucide="${a.icon}" style="width:20px;height:20px;"></i>
+      <span>${a.label}</span>
+    </button>
+  `).join('');
+
+  document.getElementById('activities-list').innerHTML = ACTIVITIES.map(a => `
+    <button class="activity-item ${state.activities.includes(a.id) ? 'active' : ''}" onclick="toggleActivity('${a.id}')">
+      <div class="activity-icon" style="${a.color}">
+        <i data-lucide="${a.icon}" style="width:16px;height:16px;"></i>
+      </div>
+      <span class="activity-label">${a.label}</span>
+      <div class="check-circle ${state.activities.includes(a.id) ? 'checked' : ''}">
+        ${state.activities.includes(a.id) ? `<svg viewBox="0 0 20 20" fill="white" style="width:100%;height:100%;"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>` : ''}
+      </div>
+    </button>
+  `).join('');
+
+  document.getElementById('transport-btns').innerHTML = TRANSPORTS.map(t => `
+    <button class="icon-btn ${state.transport === t.id ? 'active' : ''}" onclick="selectTransport('${t.id}')" style="padding:16px 4px;">
+      <i data-lucide="${t.icon}" style="width:24px;height:24px;"></i>
+      <span style="font-size:12px;">${t.label}</span>
+    </button>
+  `).join('');
+
+  document.getElementById('rythme-labels').innerHTML = RYTHME_LABELS.map((l, i) => `
+    <span class="${state.rythme == i ? 'active' : ''}">${l}</span>
+  `).join('');
+  document.getElementById('rythme-range').value = state.rythme;
+
+  document.getElementById('perso-btn').disabled = state.activities.length === 0;
+  lucide.createIcons();
+}
+
+function selectAccom(id) { state.accom = id; renderPersonalization(); }
+function toggleActivity(id) {
+  if (state.activities.includes(id)) state.activities = state.activities.filter(a => a !== id);
+  else state.activities.push(id);
+  renderPersonalization();
+}
+function selectTransport(id) { state.transport = id; renderPersonalization(); }
+function updateRythme(val) { state.rythme = parseInt(val); renderPersonalization(); }
+function handlePersonalization() { navigate('results'); }
+
+// ========================
+// RESULTS
+// ========================
+const OFFERS = [
+  {
+    id: 1, title: 'Séjour découverte à Lisbonne',
+    image: 'https://images.unsplash.com/photo-1536663815808-535e2280d2c2?w=600&h=300&fit=crop&auto=format',
+    duration: '4 jours / 3 nuits', price: 499, rating: 4.8,
+    location: 'Centre historique', highlights: ['Culture', 'Gastronomie'],
+  },
+  {
+    id: 2, title: 'Lisbonne authentique',
+    image: 'https://images.unsplash.com/photo-1585208798174-6cedd86e019a?w=600&h=300&fit=crop&auto=format',
+    duration: '4 jours / 3 nuits', price: 475, rating: 4.9,
+    location: 'Alfama', highlights: ['Authentique', 'Culture'],
+  },
+  {
+    id: 3, title: 'Escapade romantique',
+    image: 'https://images.unsplash.com/photo-1525207934214-58e69a8f8a3e?w=600&h=300&fit=crop&auto=format',
+    duration: '4 jours / 3 nuits', price: 512, rating: 5.0,
+    location: 'Belém & Baixa', highlights: ['Couple', 'Gastronomie'],
+  },
+];
+
+function renderOffers() {
+  document.getElementById('offers-list').innerHTML = OFFERS.map(o => `
+    <div class="offer-card">
+      <div class="offer-img">
+        <img src="${o.image}" alt="${o.title}" loading="lazy" />
+        <div class="rating-badge">
+          <i data-lucide="star" style="width:16px;height:16px;fill:#facc15;color:#facc15;"></i>
+          ${o.rating}
+        </div>
+      </div>
+      <div class="offer-body">
+        <p class="offer-title">${o.title}</p>
+        <div class="offer-meta"><i data-lucide="clock" style="width:16px;height:16px;"></i> ${o.duration}</div>
+        <div class="offer-meta"><i data-lucide="map-pin" style="width:16px;height:16px;"></i> ${o.location}</div>
+        <div class="offer-tags">${o.highlights.map(h => `<span class="offer-tag">${h}</span>`).join('')}</div>
+        <div class="offer-footer">
+          <div>
+            <span class="offer-price">${o.price} €</span>
+            <span class="offer-price-sub">/ personne</span>
+          </div>
+          <button class="btn-sm" onclick="selectOffer(${o.id})">Voir</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  lucide.createIcons();
+}
+
+function selectOffer(id) {
+  state.selectedOffer = OFFERS.find(o => o.id === id);
+  navigate('summary');
+}
+
+// ========================
+// SUMMARY
+// ========================
+const BREAKDOWN = [
+  { label: 'Vol aller', icon: 'plane', amount: 120 },
+  { label: 'Hébergement (3 nuits)', icon: 'hotel', amount: 260 },
+  { label: 'Activités & visites', icon: 'ticket', amount: 82 },
+  { label: 'Vol retour', icon: 'plane', amount: 50 },
+];
+
+function renderSummary() {
+  const offer = state.selectedOffer || OFFERS[0];
+  const total = BREAKDOWN.reduce((s, i) => s + i.amount, 0);
+  document.getElementById('summary-content').innerHTML = `
+    <div class="summary-trip-card">
+      <div class="trip-icon">
+        <i data-lucide="shopping-bag" style="width:24px;height:24px;color:#16a34a;"></i>
+      </div>
+      <div>
+        <p style="font-weight:700;color:var(--gray-900);">${offer.title}</p>
+        <p style="font-size:13px;color:var(--gray-600);">${offer.duration}</p>
+      </div>
+    </div>
+
+    <div class="price-breakdown">
+      <p class="breakdown-title">Détail des prix</p>
+      <div style="margin-top:16px;">
+        ${BREAKDOWN.map((item, i) => `
+          <div class="breakdown-item" style="${i === BREAKDOWN.length-1 ? 'border-bottom:none;' : ''}">
+            <div class="breakdown-item-left">
+              <div class="breakdown-icon">
+                <i data-lucide="${item.icon}" style="width:20px;height:20px;color:var(--gray-600);"></i>
+              </div>
+              <span class="breakdown-label">${item.label}</span>
+            </div>
+            <span class="breakdown-amount">${item.amount} €</span>
+          </div>
+        `).join('')}
+        <div class="breakdown-total">
+          <span class="breakdown-total-label">Total</span>
+          <span class="breakdown-total-price">${total} €</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="perks-box">
+      <p class="perk-item">✓ Annulation gratuite jusqu'à 48h avant le départ</p>
+      <p class="perk-item">✓ Paiement sécurisé</p>
+      <p class="perk-item">✓ Confirmation immédiate</p>
+    </div>
+
+    <div class="px-6 pb-8">
+      <button class="btn-primary" onclick="navigate('validation')">Payer maintenant</button>
+      <p style="margin-top:16px;text-align:center;font-size:12px;color:var(--gray-500);">En continuant, vous acceptez nos conditions générales de vente</p>
+    </div>
+  `;
+  lucide.createIcons();
+}
+
+// ========================
+// VALIDATION
+// ========================
+const PAYMENTS = [
+  { id: 'carte', icon: 'credit-card', label: 'Carte bancaire', sub: 'Visa •••• 4821' },
+  { id: 'paypal', icon: 'smartphone', label: 'PayPal', sub: 'leo.sibour@email.com' },
+  { id: 'virement', icon: 'building', label: 'Virement bancaire', sub: 'Délai 2-3 jours' },
+];
+const PRIX = { vol: 189, hotel: 312, activites: 75, frais: 18 };
+const PRIX_TOTAL = Object.values(PRIX).reduce((a, b) => a + b, 0);
+const tripData = () => state.tripData;
+
+function renderValidation() {
+  document.getElementById('validation-content').innerHTML = `
+    <!-- Trip recap -->
+    <div class="trip-recap-card">
+      <div class="trip-recap-img">
+        <img src="https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=600&h=200&fit=crop&auto=format" alt="Lisbonne" />
+        <div class="overlay"></div>
+        <div class="trip-recap-info">
+          <h3>${tripData().destination || 'Lisbonne'}</h3>
+          <p class="sub"><i data-lucide="map-pin" style="width:12px;height:12px;"></i> Portugal</p>
+        </div>
+      </div>
+      <div class="trip-recap-dates">
+        <div class="recap-date-item">
+          <i data-lucide="calendar" style="width:16px;height:16px;color:#16a34a;"></i>
+          <div><p class="label">Dates</p><p class="val">${tripData().dates || '12 – 15 avr'}</p></div>
+        </div>
+        <div class="recap-date-item">
+          <i data-lucide="users" style="width:16px;height:16px;color:#16a34a;"></i>
+          <div><p class="label">Voyageurs</p><p class="val">2 adultes</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Price detail -->
+    <div class="price-detail">
+      <p style="font-size:15px;font-weight:700;color:var(--gray-900);margin-bottom:16px;">Détail du prix</p>
+      <div class="price-row"><span class="lbl">Vol aller-retour × 2</span><span class="val">${PRIX.vol} €</span></div>
+      <div class="price-row"><span class="lbl">Hôtel 3 nuits × 2</span><span class="val">${PRIX.hotel} €</span></div>
+      <div class="price-row"><span class="lbl">Activités sélectionnées</span><span class="val">${PRIX.activites} €</span></div>
+      <div class="price-row"><span class="lbl">Frais de service</span><span class="val">${PRIX.frais} €</span></div>
+      <div class="price-total"><span class="lbl">Total</span><span class="val">${PRIX_TOTAL} €</span></div>
+    </div>
+
+    <!-- Payment -->
+    <div class="payment-card">
+      <p style="font-size:15px;font-weight:700;color:var(--gray-900);margin-bottom:16px;">Mode de paiement</p>
+      ${PAYMENTS.map(p => `
+        <button class="payment-option ${state.payment === p.id ? 'active' : ''}" onclick="selectPayment('${p.id}')">
+          <div class="pay-icon-wrap">
+            <i data-lucide="${p.icon}" style="width:16px;height:16px;color:${state.payment === p.id ? '#16a34a' : 'var(--gray-500)'};"></i>
+          </div>
+          <div style="flex:1;">
+            <p class="pay-label">${p.label}</p>
+            <p class="pay-sub">${p.sub}</p>
+          </div>
+          ${state.payment === p.id ? `<i data-lucide="check-circle" style="width:20px;height:20px;color:#16a34a;"></i>` : ''}
+        </button>
+      `).join('')}
+    </div>
+
+    <!-- Security -->
+    <div class="security-box">
+      <i data-lucide="lock" style="width:16px;height:16px;flex-shrink:0;"></i>
+      Paiement 100% sécurisé — vos données sont chiffrées SSL/TLS.
+    </div>
+
+    <!-- CGV -->
+    <div class="cgv-row" onclick="toggleCgv()" id="cgv-row">
+      <div class="checkbox ${state.cgv ? 'checked' : ''}" id="cgv-checkbox">
+        ${state.cgv ? `<svg viewBox="0 0 20 20" fill="white" style="width:100%;height:100%;"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>` : ''}
+      </div>
+      <p class="cgv-text">J'accepte les <a>conditions générales de vente</a> et la <a>politique de confidentialité</a></p>
+    </div>
+
+    <!-- Confirm btn -->
+    <button class="btn-primary" id="confirm-btn" onclick="handleConfirm()" ${!state.cgv ? 'disabled' : ''}>
+      Confirmer et payer — ${PRIX_TOTAL} €
+      <i data-lucide="chevron-right" style="width:20px;height:20px;"></i>
+    </button>
+  `;
+  lucide.createIcons();
+}
+
+function selectPayment(id) { state.payment = id; renderValidation(); }
+function toggleCgv() { state.cgv = !state.cgv; renderValidation(); }
+
+function handleConfirm() {
+  if (!state.cgv) return;
+  const btn = document.getElementById('confirm-btn');
+  btn.innerHTML = `<svg class="spinner" width="20" height="20" viewBox="0 0 24 24" fill="none"><circle opacity=".25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path opacity=".75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg> Traitement en cours...`;
+  btn.disabled = true;
+  const num = Math.floor(Math.random() * 10000);
+  document.getElementById('booking-num').textContent = 'CT-2026-' + num;
+  setTimeout(() => navigate('confirmation'), 1300);
+}
+
+// ========================
+// MY TRIPS
+// ========================
+function renderMyTrips() {
+  const user = state.user || { name: 'Léo Sibour' };
+  document.getElementById('mytrips-name').textContent = user.name + ' 👋';
+  document.getElementById('mytrips-avatar').textContent = user.name.charAt(0);
+}
+
+// ========================
+// INIT
+// ========================
+renderFilters();
+renderPersonalization();
+renderOffers();
+renderSummary();
+renderValidation();
+renderMyTrips();
+lucide.createIcons();
+</script>
+</body>
 </html>
