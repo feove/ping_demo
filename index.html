@@ -1672,8 +1672,8 @@ function selectTravelType(type) {
 }
 
 function handleFilters() {
-  renderPersonalization();
   navigate('personalization');
+  renderPersonalization();
 }
 
 // ========================
@@ -1731,7 +1731,7 @@ function renderPersonalization() {
   `).join('');
   document.getElementById('rythme-range').value = state.rythme;
 
-  document.getElementById('perso-btn').disabled = state.activities.length === 0;
+  const persoBtn = document.getElementById('perso-btn'); if (persoBtn) persoBtn.disabled = state.activities.length === 0;
   lucide.createIcons();
 }
 
@@ -1748,48 +1748,106 @@ function handlePersonalization() { navigate('results'); }
 // ========================
 // RESULTS
 // ========================
+const HIGHLIGHT_ICONS = {
+  'Culture': { icon: 'landmark', color: '#2563eb', bg: '#dbeafe' },
+  'Gastronomie': { icon: 'utensils', color: '#ea580c', bg: '#ffedd5' },
+  'Authentique': { icon: 'heart', color: '#db2777', bg: '#fce7f3' },
+  'Couple': { icon: 'users', color: '#9333ea', bg: '#f3e8ff' },
+  'Nature': { icon: 'tree-pine', color: '#16a34a', bg: '#dcfce7' },
+  'Shopping': { icon: 'shopping-bag', color: '#ca8a04', bg: '#fef9c3' },
+  'Aventure': { icon: 'zap', color: '#dc2626', bg: '#fee2e2' },
+  'Détente': { icon: 'sun', color: '#0891b2', bg: '#cffafe' },
+};
+
 const OFFERS = [
   {
     id: 1, title: 'Séjour découverte à Lisbonne',
-    image: 'https://images.unsplash.com/photo-1536663815808-535e2280d2c2?w=600&h=300&fit=crop&auto=format',
+    image: 'https://images.unsplash.com/photo-1536663815808-535e2280d2c2?w=700&h=360&fit=crop&auto=format',
+    badge: 'Coup de cœur',
+    badgeColor: '#dc2626',
     duration: '4 jours / 3 nuits', price: 499, rating: 4.8,
     location: 'Centre historique', highlights: ['Culture', 'Gastronomie'],
+    included: ['Vol inclus', 'Hôtel 4★', '3 visites'],
+    inclIcons: ['plane', 'hotel', 'ticket'],
   },
   {
     id: 2, title: 'Lisbonne authentique',
-    image: 'https://images.unsplash.com/photo-1585208798174-6cedd86e019a?w=600&h=300&fit=crop&auto=format',
+    image: 'https://images.unsplash.com/photo-1585208798174-6cedd86e019a?w=700&h=360&fit=crop&auto=format',
+    badge: 'Meilleure note',
+    badgeColor: '#16a34a',
     duration: '4 jours / 3 nuits', price: 475, rating: 4.9,
     location: 'Alfama', highlights: ['Authentique', 'Culture'],
+    included: ['Vol inclus', 'B&B typique', 'Fado offert'],
+    inclIcons: ['plane', 'home', 'music'],
   },
   {
     id: 3, title: 'Escapade romantique',
-    image: 'https://images.unsplash.com/photo-1525207934214-58e69a8f8a3e?w=600&h=300&fit=crop&auto=format',
+    image: 'https://images.unsplash.com/photo-1525207934214-58e69a8f8a3e?w=700&h=360&fit=crop&auto=format',
+    badge: 'Populaire',
+    badgeColor: '#9333ea',
     duration: '4 jours / 3 nuits', price: 512, rating: 5.0,
     location: 'Belém & Baixa', highlights: ['Couple', 'Gastronomie'],
+    included: ['Vol inclus', 'Hôtel vue mer', 'Dîner gourmet'],
+    inclIcons: ['plane', 'waves', 'utensils'],
   },
 ];
 
 function renderOffers() {
   document.getElementById('offers-list').innerHTML = OFFERS.map(o => `
     <div class="offer-card">
-      <div class="offer-img">
-        <img src="${o.image}" alt="${o.title}" loading="lazy" />
-        <div class="rating-badge">
-          <i data-lucide="star" style="width:16px;height:16px;fill:#facc15;color:#facc15;"></i>
+      <div class="offer-img" style="position:relative;height:210px;overflow:hidden;">
+        <img src="${o.image}" alt="${o.title}" loading="lazy" style="width:100%;height:100%;object-fit:cover;transition:transform 0.3s;" />
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.45) 0%,transparent 55%);"></div>
+        <!-- Badge top left -->
+        <div style="position:absolute;top:12px;left:12px;background:${o.badgeColor};color:white;font-size:11px;font-weight:700;padding:4px 10px;border-radius:50px;letter-spacing:0.03em;">${o.badge}</div>
+        <!-- Rating top right -->
+        <div style="position:absolute;top:12px;right:12px;display:flex;align-items:center;gap:4px;background:rgba(255,255,255,0.92);backdrop-filter:blur(8px);padding:5px 10px;border-radius:50px;font-size:13px;font-weight:700;">
+          <i data-lucide="star" style="width:14px;height:14px;fill:#facc15;color:#facc15;"></i>
           ${o.rating}
+        </div>
+        <!-- Location bottom left -->
+        <div style="position:absolute;bottom:12px;left:12px;display:flex;align-items:center;gap:5px;color:white;font-size:12px;font-weight:600;">
+          <i data-lucide="map-pin" style="width:13px;height:13px;"></i>
+          ${o.location}
         </div>
       </div>
       <div class="offer-body">
-        <p class="offer-title">${o.title}</p>
-        <div class="offer-meta"><i data-lucide="clock" style="width:16px;height:16px;"></i> ${o.duration}</div>
-        <div class="offer-meta"><i data-lucide="map-pin" style="width:16px;height:16px;"></i> ${o.location}</div>
-        <div class="offer-tags">${o.highlights.map(h => `<span class="offer-tag">${h}</span>`).join('')}</div>
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;">
+          <p class="offer-title" style="margin-bottom:0;flex:1;padding-right:8px;">${o.title}</p>
+        </div>
+        <!-- Meta row -->
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+          <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--gray-500);">
+            <i data-lucide="clock" style="width:14px;height:14px;"></i>
+            ${o.duration}
+          </div>
+        </div>
+        <!-- Highlight tags with icons -->
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;">
+          ${o.highlights.map(h => {
+            const hi = HIGHLIGHT_ICONS[h] || { icon: 'tag', color: '#16a34a', bg: '#dcfce7' };
+            return `<span style="display:inline-flex;align-items:center;gap:5px;background:${hi.bg};color:${hi.color};font-size:11px;font-weight:600;padding:5px 10px;border-radius:50px;">
+              <i data-lucide="${hi.icon}" style="width:12px;height:12px;"></i>
+              ${h}
+            </span>`;
+          }).join('')}
+        </div>
+        <!-- Included items -->
+        <div style="background:var(--gray-50);border-radius:12px;padding:10px 12px;margin-bottom:14px;display:flex;gap:16px;">
+          ${o.included.map((item, idx) => `
+            <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--gray-600);">
+              <i data-lucide="${o.inclIcons[idx]}" style="width:13px;height:13px;color:#16a34a;"></i>
+              ${item}
+            </div>
+          `).join('')}
+        </div>
+        <!-- Price & CTA -->
         <div class="offer-footer">
           <div>
             <span class="offer-price">${o.price} €</span>
             <span class="offer-price-sub">/ personne</span>
           </div>
-          <button class="btn-sm" onclick="selectOffer(${o.id})">Voir</button>
+          <button class="btn-sm" onclick="selectOffer(${o.id})" style="padding:12px 22px;font-size:14px;">Voir →</button>
         </div>
       </div>
     </div>
